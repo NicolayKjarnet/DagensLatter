@@ -10,11 +10,42 @@ import SwiftUI
 @main
 struct DagensLatterApp: App {
     let persistenceController = PersistenceController.shared
-
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack{
+                TabView{
+                    HomeView()
+                        .tabItem {
+                            Label("Home", systemImage: "theatermasks.fill")
+                        }
+                    SavedJokesView()
+                        .tabItem {
+                            Label("Saved Jokes", systemImage: "heart.square.fill")
+                        }.badge(3)
+                    RatedJokesView()
+                        .tabItem {
+                            Label("Rated Jokes", systemImage: "star.square")
+                        }
+                    CreateJokeView()
+                        .tabItem {
+                            Label("Create Joke", systemImage: "pencil.and.outline")
+                        }
+                } // TabView
+                .onAppear{
+                    getDocumentsDirectory()
+                }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            } // ZStack
+        } // WindowGroup
+    } // Scene
+    
+    func getDocumentsDirectory() {
+            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+            let documentsDirectory = paths[0]
+            
+            // Navigate one directory up from the Documents directory
+            let parentDirectory = documentsDirectory.deletingLastPathComponent()
+            print("Directory: \(parentDirectory)")
         }
-    }
 }
