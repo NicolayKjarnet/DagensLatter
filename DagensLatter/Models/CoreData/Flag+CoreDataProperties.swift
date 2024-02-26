@@ -27,6 +27,13 @@ extension Flag {
 
 }
 
-extension Flag : Identifiable {
-
+extension Flag {
+    func updateFromFlagsResponse(_ flagsResponse: FlagResponse) {
+        self.nsfw = flagsResponse.nsfw
+        self.religious = flagsResponse.religious
+        self.political = flagsResponse.political
+        self.racist = flagsResponse.racist
+        self.sexist = flagsResponse.sexist
+        self.explicit = flagsResponse.explicit
+    }
 }

@@ -22,7 +22,7 @@ extension APIClient {
     static let live = APIClient(
            getRandomJoke: {
                do {
-                   let url = URL(string: "https://v2.jokeapi.dev/joke/Any?type=single")!
+                   let url = URL(string: "https://v2.jokeapi.dev/joke/Any")!
                    
                    let (data, response) = try await URLSession.shared.data(from: url)
                    
@@ -53,6 +53,10 @@ struct JokeResponse: Codable {
     let id: Int
     let safe: Bool
     let lang: String
+    let comments: String?
+    let dateSaved: Date?
+    let rating: Int?
+    let userCreated: Bool?
 }
 
 struct FlagResponse: Codable {
@@ -62,6 +66,16 @@ struct FlagResponse: Codable {
     let racist: Bool
     let sexist: Bool
     let explicit: Bool
+}
+
+struct JokeInputData {
+    let id: Int16
+    let category: String
+    let type: String
+    let joke: String?
+    let setup: String?
+    let delivery: String?
+    let flags: FlagResponse
 }
 
 // MARK: - Errors

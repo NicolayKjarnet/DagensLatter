@@ -22,17 +22,17 @@ struct DagensLatterApp: App {
                     SavedJokesView()
                         .tabItem {
                             Label("Saved Jokes", systemImage: "heart.square.fill")
-                        }.badge(3)
+                        }
                     RatedJokesView()
                         .tabItem {
                             Label("Rated Jokes", systemImage: "star.square")
                         }
                     CreateJokeView()
                         .tabItem {
-                            Label("Create Joke", systemImage: "pencil.and.outline")
+                            Label("Create Joke", systemImage: "pencil.tip.crop.circle.fill")
                         }
                 } // TabView
-                .onAppear{
+                .onAppear {
                     getDocumentsDirectory()
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)

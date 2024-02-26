@@ -6,40 +6,32 @@
 //
 
 import SwiftUI
-
-struct JokeDemo: Identifiable {
-    var id: Int
-    var name: String
-}
+import CoreData
 
 struct SavedJokesView: View {
-    
-    @State var jokes: [JokeDemo] = [
-           JokeDemo(id: 1, name: "vits 1"),
-           JokeDemo(id: 2, name: "vits 2"),
-           JokeDemo(id: 3, name: "vits 3"),
-           JokeDemo(id: 4, name: "vits 4")
-       ]
+    @Environment(\.managedObjectContext) private var moc
+    @FetchRequest(
+        entity: Joke.entity(),
+        sortDescriptors: [NSSortDescriptor(keyPath: \Joke.dateSaved, ascending: false)]
+    ) var savedJokes: FetchedResults<Joke>
     
     var body: some View {
-           NavigationView {
-               List($jokes.indices, id: \.self) { index in
-                   NavigationLink(destination: SavedJokesDetailView(joke: $jokes[index])) {
-                       HStack {
-                           Text(jokes[index].name)
-                               .font(.title3)
-                               .bold()
-                               .lineLimit(1)
-                               .truncationMode(.tail)
-                       }
-                       .tint(.gray)
-                   }
-               }
-               .navigationTitle("Saved Jokes")
-           }
-       }
-}
-
-#Preview {
-    SavedJokesView()
+        NavigationView {
+            List {
+                ForEach(self.savedJokes, id: \.self) { joke in
+                    NavigationLink(destination: SavedJokesDetailView(joke: joke)) {
+                        Text(JokeManager.fullJokeText(for: joke))
+                            .font(.headline)
+                            .lineLimit(1)
+                    }
+                }
+                .onDelete(perform: { offsets in
+                    JokeManager.deleteJokeInList(at: offsets, from: savedJokes, in: moc)
+                })
+            }
+            .emptyPlaceholder(when: savedJokes, message: "No saved jokes. Save a joke to see it here!", image: Image(systemName: "heart.slash"))
+            .navigationTitle("Saved Jokes (\(savedJokes.count))")
+            .navigationBarTitleDisplayMode(.large)
+        }
+    }
 }

@@ -12,6 +12,7 @@
     </entity>
     <entity name="Joke" representedClassName="Joke" syncable="YES">
         <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="comments" optional="YES" attributeType="String"/>
         <attribute name="dateSaved" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="delivery" optional="YES" attributeType="String"/>
         <attribute name="error" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
@@ -19,9 +20,11 @@
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="joke" optional="YES" attributeType="String"/>
         <attribute name="lang" optional="YES" attributeType="String"/>
+        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="safe" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="setup" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
-        <relationship name="flags" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Flag" inverseName="jokes" inverseEntity="Flag"/>
+        <attribute name="userCreated" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="flags" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Flag" inverseName="jokes" inverseEntity="Flag"/>
     </entity>
 </model>

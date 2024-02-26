@@ -2,7 +2,7 @@
 //  Joke+CoreDataClass.swift
 //  DagensLatter
 //
-//  Created by Nicolay Kjærnet on 23/02/2024.
+//  Created by Nicolay Kjærnet on 25/02/2024.
 //
 //
 
