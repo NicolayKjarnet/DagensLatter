@@ -93,9 +93,7 @@ struct SavedJokesDetailView: View {
     }
     
     private func refreshView() {
-        // Refreshes the joke object
         joke.managedObjectContext?.refresh(joke, mergeChanges: true)
-        // Updates the view's state
         rating = Int(joke.rating)
         comment = joke.comments ?? ""
     }

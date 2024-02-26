@@ -147,8 +147,29 @@ struct JokeManager {
         }
     }
     
+    static func deleteJokeInArray(at jokes: [Joke], context: NSManagedObjectContext) {
+        for joke in jokes {
+            context.delete(joke)
+        }
+        try? context.save()
+    }
+    
     // MARK: - Full Joke Text
     static func fullJokeText(for joke: Joke) -> String {
+        switch joke.type {
+        case "single":
+            return joke.joke ?? "Unknown Joke"
+        case "twopart":
+            let setup = joke.setup ?? "Unknown Setup"
+            let delivery = joke.delivery ?? "Unknown Delivery"
+            return "\(setup)\n\(delivery)"
+        default:
+            return "Unknown Joke Type"
+        }
+    }
+    
+    // MARK: - Full Joke Text For Network Call
+    static func fullJokeTextAPI(for joke: JokeResponse) -> String {
         switch joke.type {
         case "single":
             return joke.joke ?? "Unknown Joke"

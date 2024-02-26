@@ -16,8 +16,8 @@ struct RatedJokesView: View {
     @FetchRequest(
         entity: Joke.entity(),
         sortDescriptors: [
-            NSSortDescriptor(keyPath: \Joke.dateSaved, ascending: false),
-            NSSortDescriptor(keyPath: \Joke.rating, ascending: false)
+            NSSortDescriptor(keyPath: \Joke.rating, ascending: false),
+            NSSortDescriptor(keyPath: \Joke.dateSaved, ascending: false)
         ],
         predicate: nil
     ) var jokes: FetchedResults<Joke>
@@ -45,8 +45,10 @@ struct RatedJokesView: View {
                 .pickerStyle(WheelPickerStyle())
                 
                 ForEach(jokes, id: \.self) { joke in
-                    if joke.category == selectedCategory || selectedCategory == "All" {
-                        JokeRow(joke: joke)
+                    NavigationLink(destination: SavedJokesDetailView(joke: joke)){
+                        if joke.category == selectedCategory || selectedCategory == "All" {
+                            JokeRow(joke: joke)
+                        }
                     }
                 }
             }

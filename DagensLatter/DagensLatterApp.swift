@@ -27,7 +27,7 @@ struct DagensLatterApp: App {
                         .tabItem {
                             Label("Rated Jokes", systemImage: "star.square")
                         }
-                    CreateJokeView()
+                    CreateOrEditJokeListView()
                         .tabItem {
                             Label("Create Joke", systemImage: "pencil.tip.crop.circle.fill")
                         }

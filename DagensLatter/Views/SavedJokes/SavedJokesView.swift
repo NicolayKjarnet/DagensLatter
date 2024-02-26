@@ -15,10 +15,22 @@ struct SavedJokesView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Joke.dateSaved, ascending: false)]
     ) var savedJokes: FetchedResults<Joke>
     
+    @State private var searchText: String = ""
+    
+    private var filteredJokes: [Joke] {
+        if searchText.isEmpty {
+            return Array(savedJokes)
+        } else {
+            return savedJokes.filter { joke in
+                JokeManager.fullJokeText(for: joke).localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    
     var body: some View {
         NavigationView {
             List {
-                ForEach(self.savedJokes, id: \.self) { joke in
+                ForEach(filteredJokes, id: \.self) { joke in
                     NavigationLink(destination: SavedJokesDetailView(joke: joke)) {
                         Text(JokeManager.fullJokeText(for: joke))
                             .font(.headline)
@@ -26,12 +38,15 @@ struct SavedJokesView: View {
                     }
                 }
                 .onDelete(perform: { offsets in
-                    JokeManager.deleteJokeInList(at: offsets, from: savedJokes, in: moc)
+                    JokeManager.deleteJokeInArray(at: offsets.map { filteredJokes[$0] }, context: moc)
                 })
             }
-            .emptyPlaceholder(when: savedJokes, message: "No saved jokes. Save a joke to see it here!", image: Image(systemName: "heart.slash"))
-            .navigationTitle("Saved Jokes (\(savedJokes.count))")
+            .emptyPlaceholder(when: filteredJokes, message: "No saved jokes. Save a joke to see it here!", image: Image(systemName: "heart.slash"))
+            .navigationTitle("Saved Jokes (\(filteredJokes.count))")
             .navigationBarTitleDisplayMode(.large)
+            .searchable(text: $searchText)
+            .onChange(of: searchText) {
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  CreateJokeView.swift
+//  CreateOrEditJokeListView.swift
 //  DagensLatter
 //
 //  Created by Nicolay Kjærnet on 24/02/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct CreateJokeView: View {
+struct CreateOrEditJokeListView: View {
     @Environment(\.managedObjectContext) private var moc
     
     @FetchRequest(
@@ -24,11 +24,21 @@ struct CreateJokeView: View {
         NavigationView {
             List {
                 ForEach(userCreatedJokes, id: \.self) { joke in
-                    Text(JokeManager.fullJokeText(for: joke))
-                        .onTapGesture {
-                            editingJoke = joke
-                            showingCreateJokeSheet = true
+                    HStack {
+                        Text(JokeManager.fullJokeText(for: joke))
+                            .onTapGesture {
+                                editingJoke = joke
+                                showingCreateJokeSheet = true
+                            }
+                        
+                        Spacer()
+                        
+                        if let category = joke.category {
+                            Text(category)
+                                .font(.caption)
+                                .foregroundColor(.gray)
                         }
+                    }
                 }
                 .onDelete(perform: { offsets in
                     JokeManager.deleteJokeInList(at: offsets, from: userCreatedJokes, in: moc)
