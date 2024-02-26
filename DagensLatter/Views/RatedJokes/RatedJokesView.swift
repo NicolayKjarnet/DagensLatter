@@ -13,11 +13,13 @@ struct RatedJokesView: View {
     @State private var selectedCategory: String = "All"
     @State private var selectedRating: Int16? = nil
     
-    // FetchRequest to automatically update the view when the data changes.
     @FetchRequest(
         entity: Joke.entity(),
-        sortDescriptors: [NSSortDescriptor(keyPath: \Joke.rating, ascending: false)],
-        predicate: nil // We will update this predicate when filters change
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \Joke.dateSaved, ascending: false),
+            NSSortDescriptor(keyPath: \Joke.rating, ascending: false)
+        ],
+        predicate: nil
     ) var jokes: FetchedResults<Joke>
     
     private let categories = ["All", "Dark", "Programming", "Misc", "Pun", "Spooky", "Christmas"]
@@ -28,12 +30,12 @@ struct RatedJokesView: View {
             List {
                 
                 Picker("Filter by Category", selection: $selectedCategory.onChange(updatePredicate)) {
-                    ForEach(self.categories, id: \.self) { category in
+                    ForEach(categories, id: \.self) { category in
                         Text(category).tag(category)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-
+                
                 Picker("Filter by rating", selection: $selectedRating.onChange(updatePredicate)) {
                     Text("All").tag(Int16?.none)
                     ForEach(ratings, id: \.self) { rating in
@@ -42,7 +44,7 @@ struct RatedJokesView: View {
                 }
                 .pickerStyle(WheelPickerStyle())
                 
-                ForEach(jokes) { joke in
+                ForEach(jokes, id: \.self) { joke in
                     if joke.category == selectedCategory || selectedCategory == "All" {
                         JokeRow(joke: joke)
                     }
