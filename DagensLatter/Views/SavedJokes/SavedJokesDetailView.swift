@@ -23,47 +23,66 @@ struct SavedJokesDetailView: View {
     }
     
     var body: some View {
-        VStack {
-            
-            HStack{
-                Text("Category:")
-                Text(joke.category ?? "Unknown")
-            }
-            .font(.title3)
-            
-            if let dateSaved = joke.dateSaved {
-                Text("Saved on \(dateSaved, formatter: dateFormatter)")
-                    .font(.subheadline)
-                    .tint(Color.secondary)
-                    .padding(.bottom)
-            }
-            
-            Text(JokeManager.fullJokeText(for: joke))
+        ScrollView {
+            VStack(spacing: 16) {
+                Text("Rate Joke")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 20)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("Category:")
+                            .fontWeight(.semibold)
+                        Text(joke.category ?? "Unknown")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                    
+                    if let dateSaved = joke.dateSaved {
+                        Text("Saved on \(dateSaved, formatter: dateFormatter)")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
                 .padding()
-                .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10.0, height: 10.0)))
-                .foregroundColor(.primary)
-            
-            StarRatingView(rating: $rating)
-                .padding()
-            
-            TextField("Notes on joke...", text: $comment)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Button("Save Rating") {
-                saveRating()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(UIColor.systemBackground))
+                .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                .shadow(radius: 1)
+                
+                Text(JokeManager.fullJokeText(for: joke))
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(UIColor.systemBackground))
+                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                    .shadow(radius: 1)
+                    .font(.title3)
+                
+                StarRatingStyle(rating: $rating)
+                    .padding()
+                
+                TextField("Notes on joke...", text: $comment)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Save Rating") {
+                    saveRating()
+                }
+                .buttonStyle(FilledButtonStyle(backgroundColor: Color("AccentOrange" )))
+                .fontWeight(.bold)
+                
+                Button("Delete Joke") {
+                    showingDeleteAlert = true
+                }
+                .buttonStyle(FilledButtonStyle(backgroundColor: Color("WarningRed")))
+                .fontWeight(.bold)
+                
+                
+                Spacer()
             }
-            .buttonStyle(FilledButtonStyle())
-            .padding()
-            
-            Button("Delete Joke") {
-                showingDeleteAlert = true
-            }
-            .buttonStyle(FilledButtonStyle())
-            .foregroundColor(.red)
-            .padding()
-        } // MARK: - VSTACK
-        .padding()
+            .padding([.horizontal, .bottom])
+        }
         .alert(isPresented: $showingDeleteAlert) {
             Alert(
                 title: Text("Delete Joke"),
@@ -75,7 +94,7 @@ struct SavedJokesDetailView: View {
                 secondaryButton: .cancel()
             )
         }
-        .navigationBarTitle("Rate Joke", displayMode: .automatic)
+        .navigationBarTitleDisplayMode(.automatic)
         .onAppear {
             refreshView()
         }

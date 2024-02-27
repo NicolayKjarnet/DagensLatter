@@ -18,9 +18,19 @@ struct HomeView: View {
     
     var body: some View {
         VStack {
+            Spacer()
             Text("Laughter Of The Day")
+                .tint(Color("Text"))
                 .font(.title)
                 .padding(.top)
+            HStack{
+                Spacer()
+                Image("Logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 200)
+                Spacer()
+            }
             Spacer()
             if isLoading {
                 jokePlaceholderView
@@ -30,6 +40,7 @@ struct HomeView: View {
             
             if showFavoriteMessage {
                 Text(isFavorite ? "Joke Favorited" : "Joke Unfavorited")
+                    .tint(Color("Text"))
                     .transition(.scale.combined(with: .opacity))
                     .onAppear {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -43,7 +54,8 @@ struct HomeView: View {
             Button("Get New Joke") {
                 fetchJoke()
             }
-            .buttonStyle(JokeButtonStyle(backgroundColor: Color.blue))
+            .buttonStyle(JokeButtonStyle(backgroundColor: Color("AccentOrange" )))
+            .fontWeight(.bold)
             .padding(.bottom)
             
             Spacer()
@@ -51,18 +63,6 @@ struct HomeView: View {
         .onAppear {
             fetchJoke()
         }
-    }
-    
-    private var jokePlaceholderView: some View {
-        VStack {
-            ProgressView()
-            Text("Fetching a new joke...").padding()
-        }
-        .frame(maxWidth: .infinity, minHeight: 200)
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(radius: 2)
-        .padding()
     }
     
     private func fetchJoke() {
@@ -94,10 +94,10 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(jokeResponse.category.uppercased())
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(Color.gray)
                         Text(JokeManager.fullJokeTextAPI(for: jokeResponse))
                             .multilineTextAlignment(.leading)
-                            .foregroundColor(.primary)
+                            .foregroundStyle(Color.white)
                     }
                     .padding([.leading, .top, .bottom], 10)
                     Spacer()
@@ -108,34 +108,33 @@ struct HomeView: View {
                             showFavoriteMessage = true
                         }
                     }) {
-                        Image(systemName: isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(isFavorite ? .red : .gray)
-                            .padding(10)
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(isFavorite ? Color("AccentOrange" ) : Color("SupportiveGray"))
+                            .padding(20)
+                            .padding(.bottom, 70)
                     }
                 }
                 Spacer()
             }
             .frame(minWidth: 0, maxWidth: .infinity, maxHeight: 200, alignment: .topLeading)
-            .background(Color.white)
+            .background(Color("Card"))
             .cornerRadius(12)
-            .shadow(radius: 2)
             .padding()
         } else {
             jokePlaceholderView
         }
     }
-}
-
-
-struct JokeButtonStyle: ButtonStyle {
-    var backgroundColor: Color
     
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding()
-            .background(backgroundColor)
-            .foregroundColor(.white)
-            .cornerRadius(8)
-            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+    private var jokePlaceholderView: some View {
+        VStack {
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle(tint: Color("AccentOrange")))
+            Text("Generating a new joke...").padding()
+                .foregroundColor(Color.white)
+        }
+        .frame(maxWidth: .infinity, minHeight: 200)
+        .background(Color("Card"))
+        .cornerRadius(12)
+        .padding()
     }
 }

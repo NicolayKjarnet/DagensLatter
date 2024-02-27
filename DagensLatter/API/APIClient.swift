@@ -1,47 +1,43 @@
-////
-////  APIClient.swift
-////  DagensLatter
-////
-////  Created by Nicolay Kjærnet on 23/02/2024.
-////
-
-// MARK: - APIClient
+//
+//  APIClient.swift
+//  DagensLatter
+//
+//  Created by Nicolay Kjærnet on 23/02/2024.
+//
 
 import Foundation
 
 struct APIClient {
-    
+    // MARK: - APIClient
     var getRandomJoke: (() async throws -> JokeResponse)
     
 }
 
-// MARK: - Live Client Extension
-
 extension APIClient {
+    // MARK: - Live Client Extension
     
     static let live = APIClient(
-           getRandomJoke: {
-               do {
-                   let url = URL(string: "https://v2.jokeapi.dev/joke/Any")!
-                   
-                   let (data, response) = try await URLSession.shared.data(from: url)
-                   
-                   guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                       throw APIClientError.statusCode((response as? HTTPURLResponse)?.statusCode ?? 500)
-                   }
-                   
-                   let joke = try JSONDecoder().decode(JokeResponse.self, from: data)
-                   
-                   return joke
-               } catch {
-                   throw APIClientError.failed(underlying: error)
-               }
-           }
-       )
+        getRandomJoke: {
+            do {
+                let url = URL(string: "https://v2.jokeapi.dev/joke/Any")!
+                
+                let (data, response) = try await URLSession.shared.data(from: url)
+                
+                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                    throw APIClientError.statusCode((response as? HTTPURLResponse)?.statusCode ?? 500)
+                }
+                
+                let joke = try JSONDecoder().decode(JokeResponse.self, from: data)
+                
+                return joke
+            } catch {
+                throw APIClientError.failed(underlying: error)
+            }
+        }
+    )
 }
 
 // MARK: - Data Models
-
 struct JokeResponse: Codable {
     let error: Bool
     let category: String

@@ -32,20 +32,12 @@ struct DagensLatterApp: App {
                             Label("Create Joke", systemImage: "pencil.tip.crop.circle.fill")
                         }
                 } // TabView
+                .accentColor(Color("AccentOrange" ))
                 .onAppear {
-                    getDocumentsDirectory()
+                    UITabBar.appearance().unselectedItemTintColor = UIColor(named: "TextSecondary")
                 }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
             } // ZStack
         } // WindowGroup
     } // Scene
-    
-    func getDocumentsDirectory() {
-            let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-            let documentsDirectory = paths[0]
-            
-            // Navigate one directory up from the Documents directory
-            let parentDirectory = documentsDirectory.deletingLastPathComponent()
-            print("Directory: \(parentDirectory)")
-        }
 }

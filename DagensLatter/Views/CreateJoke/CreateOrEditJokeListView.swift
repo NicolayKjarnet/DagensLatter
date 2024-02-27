@@ -23,28 +23,40 @@ struct CreateOrEditJokeListView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(userCreatedJokes, id: \.self) { joke in
-                    HStack {
-                        Text(JokeManager.fullJokeText(for: joke))
-                            .onTapGesture {
-                                editingJoke = joke
-                                showingCreateJokeSheet = true
+                if userCreatedJokes.isEmpty {
+                    VStack {
+                        Image(systemName: "pencil")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                        Text("No jokes found. Create a new joke!")
+                            .modifier(TextModifier())
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ForEach(userCreatedJokes, id: \.self) { joke in
+                        HStack {
+                            Text(JokeManager.fullJokeText(for: joke))
+                                .onTapGesture {
+                                    editingJoke = joke
+                                    showingCreateJokeSheet = true
+                                }
+                            
+                            Spacer()
+                            
+                            if let category = joke.category {
+                                Text(category)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
                             }
-                        
-                        Spacer()
-                        
-                        if let category = joke.category {
-                            Text(category)
-                                .font(.caption)
-                                .foregroundColor(.gray)
                         }
                     }
+                    .onDelete(perform: { offsets in
+                        JokeManager.deleteJokeInList(at: offsets, from: userCreatedJokes, in: moc)
+                    })
                 }
-                .onDelete(perform: { offsets in
-                    JokeManager.deleteJokeInList(at: offsets, from: userCreatedJokes, in: moc)
-                })
             }
-            .navigationBarTitle("Your Jokes")
+            .navigationTitle("Your Jokes")
             .navigationBarItems(trailing: Button(action: {
                 editingJoke = nil
                 showingCreateJokeSheet = true

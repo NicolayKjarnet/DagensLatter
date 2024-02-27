@@ -31,7 +31,7 @@ struct RatedJokesView: View {
                 
                 Picker("Filter by Category", selection: $selectedCategory.onChange(updatePredicate)) {
                     ForEach(categories, id: \.self) { category in
-                        Text(category).tag(category)
+                        Text(category).tag(category).modifier(TextModifier())
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
@@ -39,7 +39,8 @@ struct RatedJokesView: View {
                 Picker("Filter by rating", selection: $selectedRating.onChange(updatePredicate)) {
                     Text("All").tag(Int16?.none)
                     ForEach(ratings, id: \.self) { rating in
-                        Text("\(rating) Stars").tag(Int16?(Int16(rating)))
+                        RatingPickerItemView(rating: Int16(Int16(rating)), selectedRating: selectedRating)
+                            .tag(Int16?(Int16(rating)))
                     }
                 }
                 .pickerStyle(WheelPickerStyle())
@@ -83,11 +84,13 @@ struct JokeRow: View {
             if let joke = joke.joke{
                 Text(joke)
                     .font(.headline)
+                    .modifier(TextModifier())
             } else if let setup = joke.setup, let delivery = joke.delivery {
                 Text(setup).font(.headline)
                 Text(delivery).font(.subheadline)
             }
-            Text("Rating: \(joke.rating)/5").font(.subheadline)
+            Text("Rating: \(joke.rating)/5")
+                .font(.caption)
             if let comments = joke.comments, !comments.isEmpty {
                 Text("Notes: \(comments)").font(.caption).foregroundColor(.secondary)
             }
@@ -97,7 +100,6 @@ struct JokeRow: View {
     }
 }
 
-// Use this View Extension to respond to onChange events
 extension Binding {
     func onChange(_ handler: @escaping () -> Void) -> Binding<Value> {
         Binding(

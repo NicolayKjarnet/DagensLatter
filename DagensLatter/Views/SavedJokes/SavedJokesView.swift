@@ -35,13 +35,14 @@ struct SavedJokesView: View {
                         Text(JokeManager.fullJokeText(for: joke))
                             .font(.headline)
                             .lineLimit(1)
+                            .modifier(TextModifier())
                     }
                 }
                 .onDelete(perform: { offsets in
                     JokeManager.deleteJokeInArray(at: offsets.map { filteredJokes[$0] }, context: moc)
                 })
             }
-            .emptyPlaceholder(when: filteredJokes, message: "No saved jokes. Save a joke to see it here!", image: Image(systemName: "heart.slash"))
+            .emptyPlaceholder(when: filteredJokes, message: "No jokes found. Save a joke to see it here!", image: Image(systemName: "heart.slash"))
             .navigationTitle("Saved Jokes (\(filteredJokes.count))")
             .navigationBarTitleDisplayMode(.large)
             .searchable(text: $searchText)

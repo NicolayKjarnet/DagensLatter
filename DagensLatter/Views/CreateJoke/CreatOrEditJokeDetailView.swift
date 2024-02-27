@@ -116,21 +116,21 @@ struct UserCreatedJokesListView: View {
             print("Error saving the joke: \(error.localizedDescription)")
         }
         presentationMode.wrappedValue.dismiss()
-}
-
-private func loadJokeData() {
-    if let joke = jokeToEdit {
-        jokeType = joke.type ?? "single"
-        setup = joke.setup ?? ""
-        delivery = joke.delivery ?? ""
-        jokeContent = joke.joke ?? ""
-        selectedCategory = joke.category ?? "General"
-        nsfw = joke.flags?.nsfw ?? false
-        religious = joke.flags?.religious ?? false
-        political = joke.flags?.political ?? false
-        racist = joke.flags?.racist ?? false
-        sexist = joke.flags?.sexist ?? false
-        explicit = joke.flags?.explicit ?? false
     }
-}
+    
+    private func loadJokeData() {
+        if let joke = jokeToEdit {
+            jokeType = joke.type ?? "single"
+            setup = joke.setup ?? ""
+            delivery = joke.delivery ?? ""
+            jokeContent = joke.joke ?? ""
+            selectedCategory = joke.category ?? "General"
+            nsfw = joke.flags?.nsfw ?? false
+            religious = joke.flags?.religious ?? false
+            political = joke.flags?.political ?? false
+            racist = joke.flags?.racist ?? false
+            sexist = joke.flags?.sexist ?? false
+            explicit = joke.flags?.explicit ?? false
+        }
+    }
 }
