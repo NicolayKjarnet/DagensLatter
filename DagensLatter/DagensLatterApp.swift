@@ -10,11 +10,34 @@ import SwiftUI
 @main
 struct DagensLatterApp: App {
     let persistenceController = PersistenceController.shared
-
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ZStack{
+                TabView{
+                    HomeView()
+                        .tabItem {
+                            Label("Home", systemImage: "theatermasks.fill")
+                        }
+                    SavedJokesView()
+                        .tabItem {
+                            Label("Saved Jokes", systemImage: "heart.square.fill")
+                        }
+                    RatedJokesView()
+                        .tabItem {
+                            Label("Rated Jokes", systemImage: "star.square")
+                        }
+                    CreateOrEditJokeListView()
+                        .tabItem {
+                            Label("Create Joke", systemImage: "pencil.tip.crop.circle.fill")
+                        }
+                } // TabView
+                .accentColor(Color("AccentOrange" ))
+                .onAppear {
+                    UITabBar.appearance().unselectedItemTintColor = UIColor(named: "TextSecondary")
+                }
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-        }
-    }
+            } // ZStack
+        } // WindowGroup
+    } // Scene
 }
